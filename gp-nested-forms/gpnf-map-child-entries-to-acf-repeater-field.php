@@ -13,18 +13,10 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
 			'acf_repeater_field_name' => false,
 		) );
 
-		add_filter( 'gform_is_feed_asynchronous', array( $this, 'disable_async' ), 10, 4 );
-		add_action( 'gform_after_submission', array( $this, 'gw_child_entries_to_repeater' ), 10, 2 );
+		add_action( 'gform_advancedpostcreation_post_after_creation', array( $this, 'gw_child_entries_to_repeater' ), 10, 2 );
 	}
 
-	function disable_async( $is_async, $feed, $entry, $form ) {
-		if ( rgar( $feed, 'addon_slug' ) === 'gravityformsadvancedpostcreation' ) {
-			return false;
-		}
-		return $is_async;
-	}
-
-	function gw_child_entries_to_repeater( $entry, $form ) {
+	function gw_child_entries_to_repeater( $post_id, $feed, $entry, $form ) {
 
 		if ( $form['id'] !== $this->_args['form_id'] ) {
 			return;
@@ -49,12 +41,12 @@ class GPNF_Map_Child_Entries_To_ACF_Repeater {
  }
 
  new GPNF_Map_Child_Entries_To_ACF_Repeater( array(
-	'form_id'                 => 7, // Set this to the parent form ID
-	'nested_form_field_id'    => 18, // Update to the ID of the Nested Form field.
-	'field_map'               => array(
-		'nom_comedien'        => 1,
-		'role_comedien'       => 3,
+	'form_id'                  => 7, // Set this to the parent form ID
+	'nested_form_field_id'     => 18, // Update to the ID of the Nested Form field.
+	'field_map'                => array(
+		'nom_comedien'         => 1,
+		'role_comedien'        => 3,
 	), // The field map contains "field_name" => "child_entry_field_id" pairs. The field name is the name of the fields in
 	// the ACF Repeater field. The child entry field ID is the field ID from the child form.
-	'acf_repeater_field_name' => 'comediens', // Update o the field name of the ACF repeater field.
+	'acf_repeater_field_name'  => 'comediens', // Update o the field name of the ACF repeater field.
 ) );
